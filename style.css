@@ -1186,11 +1186,9 @@ body {
 /* Compact layout for phones in landscape (height ≤ 480px) */
 @media (max-height: 480px) and (orientation: landscape) {
   :root {
-    /* pit-size: fill 2 rows in ~75vh, capped by width (13vw fits 6 pits across) */
-    --pit-size:  min(calc((100vh - 100px) / 2.5), 13vw);
+    --pit-size:  min(calc((100vh - 120px) / 2.5), 12vw);
     --store-w:   clamp(50px, 7.5vw, 70px);
-    /* board fills ~75% of screen height */
-    --store-h:   calc(100vh - 88px);
+    --store-h:   calc(100vh - 110px);
   }
 
   html, body { overflow: hidden; height: 100%; }
@@ -1239,9 +1237,9 @@ body {
 /* Even smaller phones (height ≤ 380px, e.g. older iPhones landscape) */
 @media (max-height: 380px) and (orientation: landscape) {
   :root {
-    --pit-size:  min(calc((100vh - 84px) / 2.5), 12vw);
+    --pit-size:  min(calc((100vh - 100px) / 2.5), 11vw);
     --store-w:   clamp(44px, 7vw, 60px);
-    --store-h:   calc(100vh - 68px);
+    --store-h:   calc(100vh - 88px);
   }
   .store-inner { width: clamp(32px, 4.5vw, 44px); height: calc(var(--store-h) - 10px); }
   .game-header .header-inner { padding: 3px 10px; }
