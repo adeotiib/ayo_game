@@ -34,11 +34,11 @@
   --capture-glow: rgba(255, 215, 0, 0.8);
   --bg-page:      #1A0D05;
 
-  /* Sizes */
-  --pit-size:        90px;
-  --store-w:         100px;
-  --store-h:         240px;
-  --board-radius:    999px;
+  /* Sizes — scale to fill the viewport */
+  --pit-size:     clamp(64px, min(11vw, 13.5vh), 118px);
+  --store-w:      clamp(82px, 9.5vw, 116px);
+  --store-h:      clamp(170px, 27vh, 265px);
+  --board-radius: 999px;
   --font-main:       'Georgia', 'Times New Roman', serif;
   --font-ui:         'Segoe UI', system-ui, sans-serif;
   --anim-fast:       150ms;
@@ -51,7 +51,7 @@ html, body {
   background: var(--bg-page);
   color: var(--text-light);
   font-family: var(--font-ui);
-  overflow-x: hidden;
+  overflow: hidden;
 }
 
 body {
@@ -65,9 +65,19 @@ body {
       rgba(0,0,0,0.03) 40px,
       rgba(0,0,0,0.03) 80px
     );
-  min-height: 100vh;
+  height: 100dvh;
+  max-height: 100vh;
   display: flex;
   flex-direction: column;
+}
+
+/* App shell fills the whole viewport — no scroll, no dead space */
+#app {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  height: 100%;
 }
 
 /* ================================================================
@@ -82,9 +92,7 @@ body {
 }
 
 .header-inner {
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 14px 24px;
+  padding: 10px 28px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -204,8 +212,6 @@ body {
 }
 
 .player-indicator {
-  max-width: 900px;
-  margin: 0 auto;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -285,7 +291,8 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 32px 24px;
+  padding: 14px 20px;
+  min-height: 0;
 }
 
 /* ================================================================
@@ -535,8 +542,8 @@ body {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 80%;
-  height: 80%;
+  width: 85%;
+  height: 85%;
   border-radius: 50%;
   /* Concave gradient: very dark at top (in shadow), faint warm glow at bottom (ground) */
   background:
@@ -591,22 +598,35 @@ body {
   flex-wrap: wrap;
   align-items: center;
   justify-content: center;
-  gap: 2px;
-  width: 72%;
+  /* Wide enough so 4 seeds always sit in one row */
+  gap: 3px;
+  width: 92%;
   flex: 1;
-  padding: 6px 4px 0;
+  padding: 5px 3px 2px;
+  min-height: 0;
 }
 
+/* Count badge — always readable on the dark hole */
 .pit-count {
   font-family: var(--font-main);
-  font-size: 1rem;
-  font-weight: bold;
-  color: var(--text-gold);
-  text-shadow: 0 1px 4px rgba(0,0,0,0.9);
-  line-height: 1;
-  padding-bottom: 4px;
-  z-index: 1;
+  font-size: clamp(0.78rem, 1.3vh, 1.1rem);
+  font-weight: 900;
+  color: #FFE566;
+  text-shadow:
+    0 0 8px rgba(255, 220, 50, 0.7),
+    0 1px 4px rgba(0,0,0,1);
+  background: rgba(0, 0, 0, 0.52);
+  border: 1px solid rgba(255, 215, 0, 0.28);
+  border-radius: 999px;
+  padding: 1px 7px;
+  line-height: 1.3;
+  margin-bottom: 3px;
+  min-width: 22px;
+  text-align: center;
+  flex-shrink: 0;
+  z-index: 2;
   transition: transform var(--anim-fast);
+  letter-spacing: 0.02em;
 }
 
 /* Seed dots inside pits */
@@ -614,14 +634,13 @@ body {
   border-radius: 50%;
   flex-shrink: 0;
   position: relative;
-  transition: transform var(--anim-fast);
-  box-shadow: 0 1px 3px rgba(0,0,0,0.5), inset 0 1px 2px rgba(255,255,255,0.2);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.7), inset 0 1px 2px rgba(255,255,255,0.25);
 }
 
-/* Seed sizes based on count */
-.seeds-small .seed  { width: 7px;  height: 7px; }
-.seeds-medium .seed { width: 9px;  height: 9px; }
-.seeds-large .seed  { width: 12px; height: 12px; }
+/* Seed sizes — scale slightly with viewport so they stay visible */
+.seeds-small  .seed { width: clamp(6px,  0.9vh, 9px);  height: clamp(6px,  0.9vh, 9px);  }
+.seeds-medium .seed { width: clamp(8px,  1.2vh, 12px); height: clamp(8px,  1.2vh, 12px); }
+.seeds-large  .seed { width: clamp(10px, 1.6vh, 15px); height: clamp(10px, 1.6vh, 15px); }
 
 /* Seed colors cycle */
 .seed-c0 { background: radial-gradient(circle at 35% 35%, #FF7B29, #C4420A); }
@@ -851,10 +870,7 @@ body {
    MOVE HISTORY
    ================================================================ */
 .history-panel {
-  max-width: 900px;
-  margin: 0 auto 32px;
-  padding: 0 24px;
-  width: 100%;
+  display: none;
 }
 
 .history-title {
