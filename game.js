@@ -653,6 +653,9 @@ class AyoGame {
     document.getElementById('btn-play-again')
       .addEventListener('click', () => this.newGame());
 
+    // Reposition turn indicator on resize / orientation change
+    window.addEventListener('resize', () => this._updateTurnIndicator());
+
     // Help modal
     const helpOverlay = document.getElementById('help-overlay');
     document.getElementById('btn-help')
@@ -796,6 +799,7 @@ class AyoGame {
 
     this.animating = false;
     this.$board.classList.remove('animating');
+    this._updateTurnIndicator();
 
     if (result.gameOver) {
       setTimeout(() => this._showVictory(), 400);
@@ -814,26 +818,74 @@ class AyoGame {
     const fromEl  = document.getElementById(`pit-p${player}-${vi}`);
 
     this._highlightPath(path);
-    this._startHandAnimation(fromEl, path);
+    this._startHandAnimation(fromEl, path, player);
 
+    // Snapshot counts for live pit updates during flight
+    const tempCounts = [...this.state.board];
+    tempCounts[boardIdx] = 0;
+    this._updatePitDisplay(boardIdx, 0);   // source empties immediately
+
+    // Launch all seed flights (staggered)
     const promises = path.map((bi, i) => {
       const toEl = this._getElementForBoardIndex(bi);
       if (!fromEl || !toEl) return Promise.resolve();
-      return this.animator.fly(fromEl, toEl, 1, i, i * 60);
+      return this.animator.fly(fromEl, toEl, 1, i, i * 240);
+    });
+
+    // Sound + pit update fires the moment each seed lands (20ms before visual landing)
+    const LAND = 360; // fly DURATION is 380ms; fire 20ms early for natural feel
+    path.forEach((bi, i) => {
+      setTimeout(() => {
+        tempCounts[bi]++;
+        this._updatePitDisplay(bi, tempCounts[bi]);
+        this.audio.playSeedDrop(i);
+      }, i * 240 + LAND);
     });
 
     await Promise.all(promises);
-
-    path.forEach((_, i) => setTimeout(() => this.audio.playSeedDrop(i), i * 60 + 200));
-
-    await new Promise(r => setTimeout(r, path.length * 60 + 250));
+    await new Promise(r => setTimeout(r, 280));
     this._clearHighlights();
   }
 
+  /* ---- Live pit display during animation ---- */
+  _updatePitDisplay(boardIdx, count) {
+    const isP1 = P1_PITS.includes(boardIdx);
+    const key  = isP1 ? 'p1' : 'p2';
+    const vi   = isP1 ? boardIdx : boardIdx - 6;
+
+    const countEl = document.getElementById(`count-${key}-${vi}`);
+    const seedsEl = document.getElementById(`seeds-${key}-${vi}`);
+    const tipEl   = document.getElementById(`tip-${key}-${vi}`);
+    const pitEl   = document.getElementById(`pit-${key}-${vi}`);
+    if (!countEl) return;
+
+    countEl.textContent = count;
+    if (tipEl) tipEl.textContent = `${count} seed${count !== 1 ? 's' : ''}`;
+    if (pitEl) pitEl.classList.toggle('empty', count === 0);
+
+    if (!seedsEl) return;
+    seedsEl.innerHTML = '';
+    if (count > 0) {
+      const n         = Math.min(count, 16);
+      const sizeClass = count <= 4 ? 'seeds-large' : count <= 9 ? 'seeds-medium' : 'seeds-small';
+      seedsEl.className = `pit-seeds ${sizeClass}`;
+      for (let i = 0; i < n; i++) {
+        const dot = document.createElement('span');
+        dot.className = `seed seed-c${i % 6}`;
+        seedsEl.appendChild(dot);
+      }
+    } else {
+      seedsEl.className = 'pit-seeds';
+    }
+  }
+
   /* ---- Hand Animation During Sowing ---- */
-  _startHandAnimation(fromEl, path) {
+  _startHandAnimation(fromEl, path, player) {
     const hand = document.getElementById('sow-hand');
     if (!hand) return;
+
+    hand.classList.remove('p1-hand', 'p2-hand');
+    hand.classList.add(`p${player}-hand`);
 
     const center = el => {
       const r = el.getBoundingClientRect();
@@ -844,7 +896,7 @@ class AyoGame {
       hand.classList.remove('sow-hand-drop');
       void hand.offsetWidth;
       hand.classList.add('sow-hand-drop');
-      setTimeout(() => hand.classList.remove('sow-hand-drop'), 115);
+      setTimeout(() => hand.classList.remove('sow-hand-drop'), 185);
     };
 
     // Place hand at source pit with no transition, then reveal it
@@ -866,11 +918,11 @@ class AyoGame {
         hand.style.left = `${x}px`;
         hand.style.top  = `${y}px`;
         triggerDrop();
-      }, (i + 1) * 60);
+      }, (i + 1) * 240);
     });
 
     // Fade out after the last drop
-    setTimeout(() => hand.classList.remove('sow-hand-visible'), path.length * 60 + 320);
+    setTimeout(() => hand.classList.remove('sow-hand-visible'), path.length * 240 + 500);
   }
 
   /* ---- Board Index → DOM Element ---- */
@@ -1003,6 +1055,40 @@ class AyoGame {
     if (!this.state.stalemate) this.confetti.launch();
   }
 
+  /* ---- Turn Indicator ---- */
+  _updateTurnIndicator() {
+    const ind = document.getElementById('turn-indicator');
+    if (!ind) return;
+
+    if (this.state.gameOver || this.animating) {
+      ind.classList.remove('visible');
+      return;
+    }
+
+    const cp    = this.state.currentPlayer;
+    // P1: indicator left of leftmost P1 pit, pointing right →
+    // P2: indicator right of rightmost P2 pit (pit-p2-0 is rightmost visual), pointing left ←
+    const refId = cp === 1 ? 'pit-p1-0' : 'pit-p2-0';
+    const ref   = document.getElementById(refId);
+    if (!ref) return;
+
+    const r  = ref.getBoundingClientRect();
+    const iW = 62, iH = 40;
+
+    ind.classList.remove('p1-hand', 'p2-hand');
+    ind.classList.add(`p${cp}-hand`);
+
+    if (cp === 1) {
+      ind.style.left = `${r.left - iW - 8}px`;
+      ind.style.top  = `${r.top  + r.height / 2 - iH / 2}px`;
+    } else {
+      ind.style.left = `${r.right + 8}px`;
+      ind.style.top  = `${r.top  + r.height / 2 - iH / 2}px`;
+    }
+
+    ind.classList.add('visible');
+  }
+
   /* ================================================================
      RENDER
      ================================================================ */
@@ -1056,6 +1142,8 @@ class AyoGame {
     // Stores display captured seed counts
     this._renderStore('p1', state.captured[0]);
     this._renderStore('p2', state.captured[1]);
+
+    this._updateTurnIndicator();
   }
 
   _renderPit(playerKey, vi, count, isPlayable) {

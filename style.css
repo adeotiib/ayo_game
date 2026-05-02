@@ -880,34 +880,139 @@ body {
    ================================================================ */
 #sow-hand {
   position: fixed;
-  font-size: 1.6rem;
-  line-height: 1;
+  width: 48px;
+  height: 66px;
   pointer-events: none;
   z-index: 200;
   opacity: 0;
-  /* tip of finger sits right on the pit center */
-  transform: translate(-50%, -80%);
   transition:
-    left   55ms ease-in-out,
-    top    55ms ease-in-out,
-    opacity 120ms ease;
-  filter: drop-shadow(0 0 6px rgba(255, 210, 60, 0.9))
-          drop-shadow(0 2px 3px rgba(0,0,0,0.7));
+    left    190ms ease-in-out,
+    top     190ms ease-in-out,
+    opacity 160ms ease;
   will-change: left, top, opacity;
 }
 
-#sow-hand.sow-hand-visible {
-  opacity: 1;
+#sow-hand svg {
+  width: 100%;
+  height: 100%;
+  display: block;
 }
 
-@keyframes sow-hand-drop {
-  0%   { transform: translate(-50%, -80%); }
-  40%  { transform: translate(-50%, -55%); }
-  100% { transform: translate(-50%, -80%); }
+#sow-hand.sow-hand-visible { opacity: 1; }
+
+/* ---- P1: reaches from below — SVG rotated 180°, fingertips at SVG top ---- */
+/* translate(-50%, -8%) keeps the fingertips (now at SVG top) at pit centre   */
+#sow-hand.p1-hand {
+  transform: translate(-50%, -8%);
+  filter: drop-shadow(0 -4px 6px rgba(0,0,0,0.65))
+          drop-shadow(0  0  12px rgba(232, 93, 4, 0.65));
 }
-#sow-hand.sow-hand-drop {
-  animation: sow-hand-drop 110ms ease-out forwards;
+#sow-hand.p1-hand svg { transform: rotate(180deg); }
+
+/* gradient stops — dark warm brown */
+#sow-hand.p1-hand #sow-hg1 stop:first-child { stop-color: #B07040; }
+#sow-hand.p1-hand #sow-hg1 stop:last-child  { stop-color: #6B3418; }
+#sow-hand.p1-hand #sow-hg2 stop:first-child { stop-color: #A06030; }
+#sow-hand.p1-hand #sow-hg2 stop:last-child  { stop-color: #5C2E10; }
+
+/* ---- P2 (Ota): reaches from above — normal orientation, fingertips at SVG bottom ---- */
+/* translate(-50%, -92%) keeps the fingertips (SVG bottom) at pit centre                  */
+#sow-hand.p2-hand {
+  transform: translate(-50%, -92%);
+  filter: drop-shadow(0  4px 6px rgba(0,0,0,0.65))
+          drop-shadow(0  0  12px rgba(0, 150, 199, 0.70));
 }
+
+/* gradient stops — light caramel / tan */
+#sow-hand.p2-hand #sow-hg1 stop:first-child { stop-color: #DDB07A; }
+#sow-hand.p2-hand #sow-hg1 stop:last-child  { stop-color: #966635; }
+#sow-hand.p2-hand #sow-hg2 stop:first-child { stop-color: #CFA06A; }
+#sow-hand.p2-hand #sow-hg2 stop:last-child  { stop-color: #855C28; }
+
+/* ---- Drop animations ---- */
+
+/* P1: fingertips at top → dip UPWARD into pit, spring back downward */
+@keyframes sow-hand-drop-p1 {
+  0%   { transform: translate(-50%, -8%)  scale(1);    }
+  35%  { transform: translate(-50%, -18%) scale(1.06); }
+  65%  { transform: translate(-50%, -5%)  scale(0.97); }
+  100% { transform: translate(-50%, -8%)  scale(1);    }
+}
+
+/* P2: fingertips at bottom → dip DOWNWARD into pit, spring back upward */
+@keyframes sow-hand-drop-p2 {
+  0%   { transform: translate(-50%, -92%) scale(1)    rotate(0deg);  }
+  35%  { transform: translate(-50%, -82%) scale(1.06) rotate(-6deg); }
+  65%  { transform: translate(-50%, -95%) scale(0.97) rotate(3deg);  }
+  100% { transform: translate(-50%, -92%) scale(1)    rotate(0deg);  }
+}
+
+#sow-hand.p1-hand.sow-hand-drop {
+  animation: sow-hand-drop-p1 180ms cubic-bezier(.36,.07,.19,.97) forwards;
+}
+#sow-hand.p2-hand.sow-hand-drop {
+  animation: sow-hand-drop-p2 180ms cubic-bezier(.36,.07,.19,.97) forwards;
+}
+
+/* ================================================================
+   TURN INDICATOR (persistent pointing hand)
+   ================================================================ */
+#turn-indicator {
+  position: fixed;
+  width: 62px;
+  height: 40px;
+  pointer-events: none;
+  z-index: 60;
+  opacity: 0;
+  /* only fade — position jumps instantly so it doesn't slide across board */
+  transition: opacity 220ms ease;
+  will-change: opacity;
+}
+
+#turn-indicator.visible { opacity: 1; }
+
+.ti-inner {
+  width: 100%;
+  height: 100%;
+}
+
+/* P2 (Ota) hand points the other way */
+#turn-indicator.p2-hand .ti-inner {
+  transform: scaleX(-1);
+}
+
+/* Player colour tints on gradient stops */
+#turn-indicator.p1-hand #ti-hg1 stop:first-child { stop-color: #B07040; }
+#turn-indicator.p1-hand #ti-hg1 stop:last-child  { stop-color: #7A4020; }
+#turn-indicator.p1-hand #ti-hg2 stop:first-child { stop-color: #9A6030; }
+#turn-indicator.p1-hand #ti-hg2 stop:last-child  { stop-color: #6A3418; }
+
+#turn-indicator.p2-hand #ti-hg1 stop:first-child { stop-color: #DDB07A; }
+#turn-indicator.p2-hand #ti-hg1 stop:last-child  { stop-color: #9A6A30; }
+#turn-indicator.p2-hand #ti-hg2 stop:first-child { stop-color: #CFA06A; }
+#turn-indicator.p2-hand #ti-hg2 stop:last-child  { stop-color: #8A5C28; }
+
+/* Player glow colours */
+#turn-indicator.p1-hand {
+  filter: drop-shadow(0 2px 5px rgba(0,0,0,0.6))
+          drop-shadow(0 0 10px rgba(232, 93, 4, 0.75));
+}
+#turn-indicator.p2-hand {
+  filter: drop-shadow(0 2px 5px rgba(0,0,0,0.6))
+          drop-shadow(0 0 10px rgba(0, 150, 199, 0.75));
+}
+
+/* Bounce toward the active player's pits */
+@keyframes ti-bounce-right {
+  0%, 100% { transform: translateX(0);  }
+  50%       { transform: translateX(6px); }
+}
+@keyframes ti-bounce-left {
+  0%, 100% { transform: translateX(0);   }
+  50%       { transform: translateX(-6px); }
+}
+#turn-indicator.p1-hand.visible { animation: ti-bounce-right 750ms ease-in-out infinite; }
+#turn-indicator.p2-hand.visible { animation: ti-bounce-left  750ms ease-in-out infinite; }
 
 /* ================================================================
    MOVE HISTORY
