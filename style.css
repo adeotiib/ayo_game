@@ -127,6 +127,15 @@ body {
   margin-top: 2px;
 }
 
+.title-byline {
+  font-size: 0.6rem;
+  font-family: var(--font-ui);
+  font-style: italic;
+  letter-spacing: 0.1em;
+  color: rgba(184, 137, 90, 0.6);
+  margin-top: 1px;
+}
+
 .header-controls {
   display: flex;
   align-items: center;
@@ -1186,9 +1195,9 @@ body {
 /* Compact layout for phones in landscape (height ≤ 480px) */
 @media (max-height: 480px) and (orientation: landscape) {
   :root {
-    --pit-size:  min(calc((100vh - 155px) / 2.5), 11vw);
+    --pit-size:  min(calc((100vh - 172px) / 2.5), 10vw);
     --store-w:   clamp(50px, 7.5vw, 70px);
-    --store-h:   calc(100vh - 148px);
+    --store-h:   calc(100vh - 164px);
   }
 
   html, body { overflow: hidden; height: 100%; }
@@ -1202,8 +1211,9 @@ body {
 
   .game-header { flex-shrink: 0; }
   .game-header .header-inner { padding: 4px 12px; }
-  .title-ayo  { font-size: 1.2rem; }
-  .title-sub  { display: none; }
+  .title-ayo    { font-size: 1.2rem; }
+  .title-sub    { display: none; }
+  .title-byline { display: none; }
   .btn        { padding: 4px 8px; font-size: 0.73rem; }
 
   .status-bar { padding: 2px 12px; flex-shrink: 0; }
@@ -1237,15 +1247,124 @@ body {
 /* Even smaller phones (height ≤ 380px, e.g. older iPhones landscape) */
 @media (max-height: 380px) and (orientation: landscape) {
   :root {
-    --pit-size:  min(calc((100vh - 130px) / 2.5), 10vw);
+    --pit-size:  min(calc((100vh - 150px) / 2.5), 9vw);
     --store-w:   clamp(44px, 7vw, 60px);
-    --store-h:   calc(100vh - 122px);
+    --store-h:   calc(100vh - 144px);
   }
   .store-inner { width: clamp(32px, 4.5vw, 44px); height: calc(var(--store-h) - 10px); }
   .game-header .header-inner { padding: 3px 10px; }
   .title-ayo   { font-size: 1rem; }
   .board       { padding: 5px; }
   .row         { gap: 3px; }
+}
+
+/* ================================================================
+   HELP ICON BUTTON
+   ================================================================ */
+.help-icon {
+  font-size: 1rem;
+  font-weight: 900;
+  font-family: var(--font-ui);
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.2em;
+  height: 1.2em;
+  border-radius: 50%;
+  border: 1.5px solid var(--text-gold);
+  color: var(--text-gold);
+}
+
+/* ================================================================
+   HELP / INSTRUCTIONS MODAL
+   ================================================================ */
+.help-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(10,4,1,0.88);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 400;
+  backdrop-filter: blur(6px);
+  padding: 16px;
+  animation: fade-in var(--anim-mid) ease both;
+}
+.help-overlay[hidden] { display: none !important; }
+
+.help-card {
+  background: linear-gradient(160deg, #4E2409 0%, #3B1F0C 100%);
+  border: 2px solid var(--wood-grain);
+  border-radius: 18px;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.06);
+  padding: 28px 28px 24px;
+  max-width: 520px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+}
+
+.help-close {
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-size: 1.1rem;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 6px;
+  transition: color var(--anim-fast);
+}
+.help-close:hover { color: var(--text-light); }
+
+.help-title {
+  font-family: var(--font-main);
+  font-size: 1.5rem;
+  color: var(--text-gold);
+  text-align: center;
+  margin-bottom: 20px;
+  letter-spacing: 0.04em;
+}
+
+.help-body {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.help-section h3 {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--wood-honey);
+  margin-bottom: 5px;
+}
+
+.help-section p {
+  font-size: 0.88rem;
+  line-height: 1.6;
+  color: var(--text-light);
+}
+
+.help-section strong {
+  color: var(--text-gold);
+}
+
+@media (max-height: 480px) and (orientation: landscape) {
+  .help-card {
+    padding: 16px 20px 14px;
+    max-height: 85vh;
+    border-radius: 12px;
+  }
+  .help-title { font-size: 1.1rem; margin-bottom: 12px; }
+  .help-body  { gap: 10px; }
+  .help-section h3 { font-size: 0.62rem; }
+  .help-section p  { font-size: 0.78rem; line-height: 1.45; }
 }
 
 /* Fullscreen button */

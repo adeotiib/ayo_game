@@ -19,6 +19,7 @@
         <h1 class="title">
           <span class="title-ayo">AYO</span>
           <span class="title-sub">The Ancient Game of Seeds</span>
+          <span class="title-byline">by ibro</span>
         </h1>
         <div class="header-controls">
           <button id="btn-toggle-mode" class="btn btn-outline" title="Toggle game mode">
@@ -26,6 +27,9 @@
             <span class="mode-label">vs Ota</span>
           </button>
           <button id="btn-new-game" class="btn btn-primary">New Game</button>
+          <button id="btn-help" class="btn btn-icon" title="How to play">
+            <span class="help-icon">?</span>
+          </button>
           <button id="btn-toggle-sound" class="btn btn-icon" title="Toggle sound">
             <span class="sound-icon">🔊</span>
           </button>
@@ -191,6 +195,40 @@
 
     <!-- Confetti canvas -->
     <canvas id="confetti-canvas" aria-hidden="true"></canvas>
+
+    <!-- Help / Instructions Modal -->
+    <div class="help-overlay" id="help-overlay" hidden>
+      <div class="help-card">
+        <button class="help-close" id="btn-help-close" aria-label="Close">✕</button>
+        <h2 class="help-title">How to Play Ayo</h2>
+        <div class="help-body">
+          <div class="help-section">
+            <h3>Goal</h3>
+            <p>Capture more than 24 seeds (out of 48) to win.</p>
+          </div>
+          <div class="help-section">
+            <h3>Your Turn</h3>
+            <p>Pick any of your 6 pits that has seeds. Those seeds are lifted and dropped one-by-one into each pit counter-clockwise around the board.</p>
+          </div>
+          <div class="help-section">
+            <h3>Capturing</h3>
+            <p>If the <strong>last seed</strong> you drop lands on the <strong>opponent's side</strong> and that pit now holds exactly <strong>2 or 3 seeds</strong>, you capture them. Keep looking backwards — if the pit before it also has 2 or 3 seeds on the opponent's side, capture that too (chain capture).</p>
+          </div>
+          <div class="help-section">
+            <h3>Grand-Slam Rule</h3>
+            <p>You cannot capture every single one of the opponent's seeds in one move. If your capture would empty their side completely, no capture is made.</p>
+          </div>
+          <div class="help-section">
+            <h3>Feed Rule</h3>
+            <p>If the opponent has no seeds, you must play a pit whose seeds will reach their side. If no such move exists, the game ends.</p>
+          </div>
+          <div class="help-section">
+            <h3>Game Over</h3>
+            <p>The game ends when one side is empty. The player with more captured seeds wins. Equal seeds is a draw.</p>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <!-- Victory Overlay -->
     <div class="victory-overlay" id="victory-overlay" hidden>

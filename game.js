@@ -653,6 +653,16 @@ class AyoGame {
     document.getElementById('btn-play-again')
       .addEventListener('click', () => this.newGame());
 
+    // Help modal
+    const helpOverlay = document.getElementById('help-overlay');
+    document.getElementById('btn-help')
+      .addEventListener('click', () => { helpOverlay.hidden = false; });
+    document.getElementById('btn-help-close')
+      .addEventListener('click', () => { helpOverlay.hidden = true; });
+    helpOverlay.addEventListener('click', e => {
+      if (e.target === helpOverlay) helpOverlay.hidden = true;
+    });
+
     // Fullscreen toggle button
     document.getElementById('btn-fullscreen')
       ?.addEventListener('click', () => {
