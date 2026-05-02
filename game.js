@@ -708,10 +708,10 @@ class AyoGame {
   toggleMode() {
     this.vsAI = !this.vsAI;
     const btn   = document.getElementById('btn-toggle-mode');
-    btn.querySelector('.mode-label').textContent = this.vsAI ? 'vs AI'    : 'vs Human';
+    btn.querySelector('.mode-label').textContent = this.vsAI ? 'vs Ota'   : 'vs Human';
     btn.querySelector('.mode-icon').textContent  = this.vsAI ? '🤖'       : '👥';
-    document.getElementById('p2-name').textContent          = this.vsAI ? 'AI' : 'Player 2';
-    document.getElementById('vscore-p2-label').textContent  = this.vsAI ? 'AI' : 'Player 2';
+    document.getElementById('p2-name').textContent          = this.vsAI ? 'Ota' : 'Player 2';
+    document.getElementById('vscore-p2-label').textContent  = this.vsAI ? 'Ota' : 'Player 2';
     this.newGame();
   }
 
@@ -887,7 +887,7 @@ class AyoGame {
   _recordHistory(result) {
     const { player, boardIdx, captures, totalCaptured } = result;
     const pitLabel = player === 1 ? boardIdx + 1 : boardIdx - 6 + 1;
-    const pName    = (player === 2 && this.vsAI) ? 'AI' : `P${player}`;
+    const pName    = (player === 2 && this.vsAI) ? 'Ota' : `P${player}`;
 
     let text    = `${pName} → Pit ${pitLabel}`;
     let classes = `history-item p${player}-move`;
@@ -932,7 +932,7 @@ class AyoGame {
       emojiEl.textContent = '🔄';
       if (winner === 0)      titleEl.textContent = 'Stalemate — Draw!';
       else if (winner === 1) titleEl.textContent = 'Stalemate — P1 Wins!';
-      else                   titleEl.textContent = `Stalemate — ${this.vsAI ? 'AI' : 'P2'} Wins!`;
+      else                   titleEl.textContent = `Stalemate — ${this.vsAI ? 'Ota' : 'P2'} Wins!`;
     } else if (winner === 0) {
       titleEl.textContent = "It's a Tie!";
       emojiEl.textContent = '🤝';
@@ -940,7 +940,7 @@ class AyoGame {
       titleEl.textContent = 'Player 1 Wins!';
       emojiEl.textContent = '🏆';
     } else {
-      titleEl.textContent = this.vsAI ? 'AI Wins!' : 'Player 2 Wins!';
+      titleEl.textContent = this.vsAI ? 'Ota Wins!' : 'Player 2 Wins!';
       emojiEl.textContent = this.vsAI ? '🤖' : '🏆';
     }
 
@@ -971,17 +971,17 @@ class AyoGame {
         const w = state.getWinner();
         if (w === 0)      msgEl.textContent = "Game Over — It's a Tie!";
         else if (w === 1) msgEl.textContent = 'Game Over — Player 1 Wins!';
-        else              msgEl.textContent = `Game Over — ${this.vsAI ? 'AI' : 'Player 2'} Wins!`;
+        else              msgEl.textContent = `Game Over — ${this.vsAI ? 'Ota' : 'Player 2'} Wins!`;
       }
     } else {
       const oppPits  = cp === 1 ? P2_PITS : P1_PITS;
       const oppEmpty = oppPits.every(i => state.board[i] === 0);
-      const pName    = (cp === 2 && this.vsAI) ? 'AI' : `Player ${cp}`;
+      const pName    = (cp === 2 && this.vsAI) ? 'Ota' : `Player ${cp}`;
       msgEl.textContent = oppEmpty ? `${pName} must feed!` : `${pName}'s Turn`;
     }
 
-    document.getElementById('p2-name').textContent         = this.vsAI ? 'AI' : 'Player 2';
-    document.getElementById('vscore-p2-label').textContent = this.vsAI ? 'AI' : 'Player 2';
+    document.getElementById('p2-name').textContent         = this.vsAI ? 'Ota' : 'Player 2';
+    document.getElementById('vscore-p2-label').textContent = this.vsAI ? 'Ota' : 'Player 2';
 
     // Valid moves for highlight logic
     const validMoves = state.gameOver ? [] : state.validMoves(cp);
@@ -1031,7 +1031,7 @@ class AyoGame {
       seedsEl.className = 'pit-seeds';
     }
 
-    const label = playerKey === 'p1' ? 'Player 1' : (this.vsAI ? 'AI' : 'Player 2');
+    const label = playerKey === 'p1' ? 'Player 1' : (this.vsAI ? 'Ota' : 'Player 2');
     pitEl.setAttribute('aria-label', `${label} Pit ${vi + 1}: ${count} seeds`);
   }
 
@@ -1052,7 +1052,7 @@ class AyoGame {
 
     const store = document.getElementById(`store-${playerKey}`);
     if (store) {
-      const pName = playerKey === 'p1' ? 'Player 1' : (this.vsAI ? 'AI' : 'Player 2');
+      const pName = playerKey === 'p1' ? 'Player 1' : (this.vsAI ? 'Ota' : 'Player 2');
       store.setAttribute('aria-label', `${pName} captured: ${count} seeds`);
     }
   }
