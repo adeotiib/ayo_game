@@ -814,6 +814,7 @@ class AyoGame {
     const fromEl  = document.getElementById(`pit-p${player}-${vi}`);
 
     this._highlightPath(path);
+    this._startHandAnimation(fromEl, path);
 
     const promises = path.map((bi, i) => {
       const toEl = this._getElementForBoardIndex(bi);
@@ -827,6 +828,49 @@ class AyoGame {
 
     await new Promise(r => setTimeout(r, path.length * 60 + 250));
     this._clearHighlights();
+  }
+
+  /* ---- Hand Animation During Sowing ---- */
+  _startHandAnimation(fromEl, path) {
+    const hand = document.getElementById('sow-hand');
+    if (!hand) return;
+
+    const center = el => {
+      const r = el.getBoundingClientRect();
+      return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
+    };
+
+    const triggerDrop = () => {
+      hand.classList.remove('sow-hand-drop');
+      void hand.offsetWidth;
+      hand.classList.add('sow-hand-drop');
+      setTimeout(() => hand.classList.remove('sow-hand-drop'), 115);
+    };
+
+    // Place hand at source pit with no transition, then reveal it
+    const src = center(fromEl);
+    hand.style.transition = 'none';
+    hand.style.left = `${src.x}px`;
+    hand.style.top  = `${src.y}px`;
+    void hand.offsetWidth;
+    hand.style.transition = '';
+    hand.classList.add('sow-hand-visible');
+    triggerDrop();
+
+    // Walk the hand along the sowing path
+    path.forEach((bi, i) => {
+      setTimeout(() => {
+        const el = this._getElementForBoardIndex(bi);
+        if (!el) return;
+        const { x, y } = center(el);
+        hand.style.left = `${x}px`;
+        hand.style.top  = `${y}px`;
+        triggerDrop();
+      }, (i + 1) * 60);
+    });
+
+    // Fade out after the last drop
+    setTimeout(() => hand.classList.remove('sow-hand-visible'), path.length * 60 + 320);
   }
 
   /* ---- Board Index → DOM Element ---- */
