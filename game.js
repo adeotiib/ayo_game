@@ -608,7 +608,36 @@ class AyoGame {
 
     this._bindDOM();
     this._initCanvases();
+    this._setupMobile();
     this.render();
+  }
+
+  /* ---- Mobile: orientation lock + fullscreen ---- */
+  _setupMobile() {
+    // Ask the browser to lock to landscape (works on Android Chrome)
+    if (screen.orientation?.lock) {
+      screen.orientation.lock('landscape').catch(() => {});
+    }
+
+    // Enter fullscreen on first touch (browsers require a user gesture)
+    const enterFS = () => {
+      const el = document.documentElement;
+      const req = el.requestFullscreen
+               || el.webkitRequestFullscreen
+               || el.mozRequestFullScreen;
+      if (req) req.call(el).catch(() => {});
+    };
+    document.addEventListener('touchstart', enterFS, { once: true });
+
+    // Keep fullscreen icon in sync
+    const fsBtn  = document.getElementById('btn-fullscreen');
+    const fsIcon = fsBtn?.querySelector('.fs-icon');
+    const onFSChange = () => {
+      const isFS = !!(document.fullscreenElement || document.webkitFullscreenElement);
+      if (fsIcon) fsIcon.textContent = isFS ? '✕' : '⛶';
+    };
+    document.addEventListener('fullscreenchange',       onFSChange);
+    document.addEventListener('webkitfullscreenchange', onFSChange);
   }
 
   /* ---- DOM Binding ---- */
@@ -623,6 +652,19 @@ class AyoGame {
       .addEventListener('click', () => this.toggleSound());
     document.getElementById('btn-play-again')
       .addEventListener('click', () => this.newGame());
+
+    // Fullscreen toggle button
+    document.getElementById('btn-fullscreen')
+      ?.addEventListener('click', () => {
+        if (document.fullscreenElement || document.webkitFullscreenElement) {
+          (document.exitFullscreen || document.webkitExitFullscreen)
+            ?.call(document);
+        } else {
+          const el  = document.documentElement;
+          const req = el.requestFullscreen || el.webkitRequestFullscreen;
+          req?.call(el).catch(() => {});
+        }
+      });
 
     // P1 pits: visual index i = board index i (0-5)
     P1_PITS.forEach(bi => {

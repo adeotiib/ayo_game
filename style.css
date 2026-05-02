@@ -1118,6 +1118,133 @@ body {
 }
 
 /* ================================================================
+   MOBILE LANDSCAPE OPTIMISATION
+   ================================================================ */
+
+/* Portrait rotation prompt — only visible on phones held upright */
+.portrait-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: var(--bg-page);
+  z-index: 9999;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  text-align: center;
+  padding: 32px;
+}
+.portrait-phone {
+  font-size: 4rem;
+  animation: portrait-rock 1.4s ease-in-out infinite;
+  transform-origin: center bottom;
+}
+@keyframes portrait-rock {
+  0%, 100% { transform: rotate(-15deg); }
+  50%       { transform: rotate(15deg); }
+}
+.portrait-msg {
+  font-family: var(--font-main);
+  font-size: 1.3rem;
+  color: var(--text-gold);
+  line-height: 1.5;
+}
+.portrait-arrow {
+  font-size: 2.5rem;
+  color: var(--wood-grain);
+  animation: portrait-spin 2s ease-in-out infinite;
+}
+@keyframes portrait-spin {
+  0%, 40%  { transform: rotate(0deg);   opacity: 1; }
+  80%      { transform: rotate(180deg); opacity: 0.4; }
+  100%     { transform: rotate(180deg); opacity: 1; }
+}
+
+/* Show portrait overlay only on real phones in portrait */
+@media (orientation: portrait) and (max-width: 768px) {
+  .portrait-overlay { display: flex; }
+  #app { display: none; }
+}
+
+/* Compact layout for phones in landscape (height ≤ 480px) */
+@media (max-height: 480px) and (orientation: landscape) {
+  :root {
+    --pit-size:  62px;
+    --store-w:   70px;
+    --store-h:   165px;
+  }
+
+  html, body { overflow: hidden; height: 100%; }
+
+  #app {
+    height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .game-header { flex-shrink: 0; }
+  .game-header .header-inner { padding: 5px 14px; }
+  .title-ayo  { font-size: 1.3rem; }
+  .title-sub  { display: none; }
+  .btn        { padding: 5px 10px; font-size: 0.75rem; }
+
+  .status-bar { padding: 3px 14px; flex-shrink: 0; }
+  .status-message { font-size: 0.78rem; min-width: 100px; }
+  .turn-badge { padding: 3px 8px; font-size: 0.72rem; }
+
+  .board-wrap {
+    flex: 1;
+    padding: 4px 10px;
+    min-height: 0;
+  }
+
+  .board { padding: 10px 8px; }
+  .row   { gap: 5px; padding: 4px 0; }
+
+  .store-inner {
+    width: 52px;
+    height: 135px;
+  }
+  .store-count  { font-size: 1.1rem; }
+  .store-label  { font-size: 0.55rem; }
+
+  .pit-count    { font-size: 0.82rem; }
+  .board-divider { padding: 2px 8px; }
+
+  .history-panel { display: none; }
+
+  .ai-thinking  { bottom: 8px; right: 8px; padding: 6px 12px; font-size: 0.75rem; }
+}
+
+/* Even smaller phones (height ≤ 380px, e.g. older iPhones) */
+@media (max-height: 380px) and (orientation: landscape) {
+  :root {
+    --pit-size:  52px;
+    --store-w:   60px;
+    --store-h:   140px;
+  }
+  .store-inner { width: 44px; height: 110px; }
+  .game-header .header-inner { padding: 3px 10px; }
+  .title-ayo   { font-size: 1.1rem; }
+  .board       { padding: 6px; }
+  .row         { gap: 3px; }
+}
+
+/* Fullscreen button */
+.fs-icon {
+  font-size: 1.1rem;
+  line-height: 1;
+  display: inline-block;
+}
+
+/* Hide fullscreen button on desktop (not needed) */
+@media (min-width: 1024px) and (min-height: 700px) {
+  #btn-fullscreen { display: none; }
+}
+
+/* ================================================================
    UTILITY / MISC
    ================================================================ */
 .sr-only {

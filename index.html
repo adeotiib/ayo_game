@@ -2,7 +2,11 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-fullscreen" />
+  <meta name="theme-color" content="#1A0D05" />
   <title>Ayo — The Ancient Game of Seeds</title>
   <link rel="stylesheet" href="style.css" />
 </head>
@@ -24,6 +28,9 @@
           <button id="btn-new-game" class="btn btn-primary">New Game</button>
           <button id="btn-toggle-sound" class="btn btn-icon" title="Toggle sound">
             <span class="sound-icon">🔊</span>
+          </button>
+          <button id="btn-fullscreen" class="btn btn-icon" title="Fullscreen">
+            <span class="fs-icon fs-enter">⛶</span>
           </button>
         </div>
       </div>
@@ -214,6 +221,13 @@
     </div>
 
   </div><!-- /app -->
+
+  <!-- Portrait rotation prompt (shown on phones in portrait mode) -->
+  <div class="portrait-overlay" id="portrait-overlay" aria-hidden="true">
+    <div class="portrait-phone">📱</div>
+    <p class="portrait-msg">Rotate your device<br>to play Ayo</p>
+    <div class="portrait-arrow">↻</div>
+  </div>
 
   <script src="game.js"></script>
 </body>
