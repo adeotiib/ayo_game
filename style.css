@@ -1,0 +1,1143 @@
+/* ================================================================
+   AYO — Mancala Game Styles
+   Earthy African aesthetic: warm woods, burnt oranges, deep reds
+   ================================================================ */
+
+/* --- Reset & Base --- */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  /* Palette */
+  --wood-dark:    #3B1F0C;
+  --wood-mid:     #6B3A1F;
+  --wood-light:   #9C5A2D;
+  --wood-grain:   #C4843E;
+  --wood-honey:   #E8A85A;
+  --pit-bg:       #2A1208;
+  --pit-shadow:   #1A0A04;
+  --board-bg:     #7A3E18;
+  --board-rim:    #4E2409;
+  --seed-colors:  #E85D04, #F48C06, #FFBA08, #D62828, #9B2226, #AE2012;
+  --store-bg:     #1E0C04;
+  --store-rim:    #5C2D0A;
+  --text-light:   #F5E6C8;
+  --text-gold:    #FFD166;
+  --text-muted:   #B8895A;
+  --p1-color:     #E85D04;
+  --p2-color:     #0096C7;
+  --p1-glow:      rgba(232, 93, 4, 0.6);
+  --p2-glow:      rgba(0, 150, 199, 0.6);
+  --capture-glow: rgba(255, 215, 0, 0.8);
+  --bg-page:      #1A0D05;
+
+  /* Sizes */
+  --pit-size:        90px;
+  --store-w:         100px;
+  --store-h:         240px;
+  --board-radius:    999px;
+  --font-main:       'Georgia', 'Times New Roman', serif;
+  --font-ui:         'Segoe UI', system-ui, sans-serif;
+  --anim-fast:       150ms;
+  --anim-mid:        300ms;
+  --anim-slow:       600ms;
+}
+
+html, body {
+  height: 100%;
+  background: var(--bg-page);
+  color: var(--text-light);
+  font-family: var(--font-ui);
+  overflow-x: hidden;
+}
+
+body {
+  background-image:
+    radial-gradient(ellipse at 20% 10%, rgba(92,45,10,0.4) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 90%, rgba(58,15,5,0.5) 0%, transparent 60%),
+    repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 40px,
+      rgba(0,0,0,0.03) 40px,
+      rgba(0,0,0,0.03) 80px
+    );
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ================================================================
+   HEADER
+   ================================================================ */
+.game-header {
+  background: linear-gradient(135deg, var(--wood-dark) 0%, var(--wood-mid) 100%);
+  border-bottom: 3px solid var(--wood-grain);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+  position: relative;
+  z-index: 10;
+}
+
+.header-inner {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 14px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.title {
+  display: flex;
+  flex-direction: column;
+  line-height: 1;
+}
+
+.title-ayo {
+  font-family: var(--font-main);
+  font-size: 2.4rem;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  background: linear-gradient(135deg, var(--wood-honey) 0%, #FFD166 50%, var(--wood-grain) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: none;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.6));
+}
+
+.title-sub {
+  font-size: 0.7rem;
+  font-family: var(--font-ui);
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.header-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* ================================================================
+   BUTTONS
+   ================================================================ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 18px;
+  border: none;
+  border-radius: 8px;
+  font-family: var(--font-ui);
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--anim-fast) ease;
+  position: relative;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.btn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(255,255,255,0);
+  transition: background var(--anim-fast);
+}
+.btn:hover::after { background: rgba(255,255,255,0.08); }
+.btn:active::after { background: rgba(255,255,255,0.15); }
+
+.btn-primary {
+  background: linear-gradient(135deg, #C4591A, #E8810A);
+  color: #fff;
+  box-shadow: 0 3px 12px rgba(196,89,26,0.45), inset 0 1px 0 rgba(255,255,255,0.15);
+}
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(196,89,26,0.55), inset 0 1px 0 rgba(255,255,255,0.2);
+}
+.btn-primary:active { transform: translateY(0); }
+
+.btn-outline {
+  background: transparent;
+  color: var(--text-gold);
+  border: 2px solid var(--wood-grain);
+}
+.btn-outline:hover {
+  background: rgba(196, 132, 62, 0.15);
+  border-color: var(--wood-honey);
+}
+
+.btn-icon {
+  background: transparent;
+  color: var(--text-muted);
+  padding: 9px 12px;
+  font-size: 1.1rem;
+  border: 2px solid transparent;
+}
+.btn-icon:hover {
+  color: var(--text-gold);
+  border-color: var(--wood-grain);
+}
+
+.btn-lg {
+  padding: 14px 32px;
+  font-size: 1.1rem;
+  border-radius: 12px;
+}
+
+/* ================================================================
+   STATUS BAR
+   ================================================================ */
+.status-bar {
+  background: linear-gradient(90deg, rgba(59,31,12,0.9) 0%, rgba(107,58,31,0.8) 50%, rgba(59,31,12,0.9) 100%);
+  border-bottom: 2px solid rgba(196,132,62,0.25);
+  padding: 10px 24px;
+}
+
+.player-indicator {
+  max-width: 900px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.turn-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  transition: all var(--anim-mid) ease;
+  opacity: 0.45;
+}
+
+.turn-badge.active {
+  opacity: 1;
+}
+
+.p1-badge {
+  background: rgba(232,93,4,0.15);
+  border: 2px solid rgba(232,93,4,0.3);
+  color: var(--p1-color);
+}
+.p1-badge.active {
+  background: rgba(232,93,4,0.25);
+  border-color: var(--p1-color);
+  box-shadow: 0 0 14px var(--p1-glow);
+}
+
+.p2-badge {
+  background: rgba(0,150,199,0.12);
+  border: 2px solid rgba(0,150,199,0.25);
+  color: var(--p2-color);
+}
+.p2-badge.active {
+  background: rgba(0,150,199,0.22);
+  border-color: var(--p2-color);
+  box-shadow: 0 0 14px var(--p2-glow);
+}
+
+.turn-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: currentColor;
+  transition: all var(--anim-mid);
+}
+.turn-badge.active .turn-dot {
+  animation: pulse-dot 1.2s ease-in-out infinite;
+  box-shadow: 0 0 8px currentColor;
+}
+@keyframes pulse-dot {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50%       { transform: scale(1.5); opacity: 0.7; }
+}
+
+.status-message {
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--text-gold);
+  text-align: center;
+  min-width: 200px;
+  text-shadow: 0 1px 6px rgba(0,0,0,0.6);
+  transition: all var(--anim-mid) ease;
+}
+
+/* ================================================================
+   BOARD WRAP
+   ================================================================ */
+.board-wrap {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 24px;
+}
+
+/* ================================================================
+   BOARD
+   ================================================================ */
+.board {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  background: linear-gradient(160deg,
+    #8B4513 0%,
+    #6B3A1F 25%,
+    #7A3E18 50%,
+    #5C2D0A 75%,
+    #4E2409 100%
+  );
+  border-radius: var(--board-radius);
+  padding: 20px;
+  position: relative;
+  box-shadow:
+    0 20px 60px rgba(0,0,0,0.7),
+    0 8px 24px rgba(0,0,0,0.5),
+    inset 0 2px 4px rgba(255,255,255,0.06),
+    inset 0 -3px 8px rgba(0,0,0,0.4);
+  border: 4px solid var(--board-rim);
+  /* Wood grain overlay */
+  background-image: linear-gradient(160deg,
+    #9C5A2D 0%,
+    #6B3A1F 30%,
+    #7A3E18 60%,
+    #5C2D0A 100%
+  );
+}
+
+/* Wood grain lines */
+.board::before {
+  content: '';
+  position: absolute;
+  inset: 4px;
+  border-radius: calc(var(--board-radius) - 4px);
+  background-image: repeating-linear-gradient(
+    92deg,
+    transparent 0px,
+    transparent 18px,
+    rgba(0,0,0,0.04) 18px,
+    rgba(0,0,0,0.04) 19px
+  );
+  pointer-events: none;
+}
+
+/* Board rim highlight */
+.board::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: var(--board-radius);
+  background: linear-gradient(
+    to bottom,
+    rgba(255,255,255,0.07) 0%,
+    transparent 40%,
+    rgba(0,0,0,0.15) 100%
+  );
+  pointer-events: none;
+}
+
+/* ================================================================
+   STORES (MANCALA PITS)
+   ================================================================ */
+.store {
+  width: var(--store-w);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 1;
+}
+
+.store-inner {
+  width: 80px;
+  height: calc(var(--store-h) - 10px);
+  background: radial-gradient(ellipse at 50% 30%, #1A0805, var(--store-bg) 70%);
+  border-radius: 40px;
+  border: 3px solid var(--store-rim);
+  box-shadow:
+    inset 0 4px 20px rgba(0,0,0,0.8),
+    inset 0 0 40px rgba(0,0,0,0.5),
+    0 2px 8px rgba(0,0,0,0.4);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 14px 8px;
+  position: relative;
+  overflow: hidden;
+  transition: box-shadow var(--anim-mid);
+}
+
+.store-inner::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 30%;
+  background: linear-gradient(to bottom, rgba(255,255,255,0.04), transparent);
+  border-radius: 40px 40px 0 0;
+  pointer-events: none;
+}
+
+.store-seeds {
+  flex: 1;
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  padding: 4px;
+  min-height: 60px;
+}
+
+.store-count {
+  font-family: var(--font-main);
+  font-size: 1.7rem;
+  font-weight: bold;
+  color: var(--text-gold);
+  text-shadow: 0 0 12px rgba(255, 209, 102, 0.5), 0 2px 6px rgba(0,0,0,0.8);
+  line-height: 1;
+  transition: transform var(--anim-fast);
+}
+
+.store-count.bounce {
+  animation: count-bounce 0.4s cubic-bezier(0.36, 0.07, 0.19, 0.97);
+}
+@keyframes count-bounce {
+  0%   { transform: scale(1); }
+  30%  { transform: scale(1.5); }
+  60%  { transform: scale(0.9); }
+  100% { transform: scale(1); }
+}
+
+.store-label {
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  opacity: 0.7;
+}
+
+/* Store active glow for P1 */
+.store-p1 .store-inner {
+  border-color: rgba(232, 93, 4, 0.3);
+}
+.p1-turn .store-p1 .store-inner {
+  border-color: rgba(232, 93, 4, 0.6);
+  box-shadow:
+    inset 0 4px 20px rgba(0,0,0,0.8),
+    inset 0 0 40px rgba(0,0,0,0.5),
+    0 0 20px rgba(232, 93, 4, 0.25),
+    0 2px 8px rgba(0,0,0,0.4);
+}
+
+/* Store active glow for P2 */
+.store-p2 .store-inner {
+  border-color: rgba(0, 150, 199, 0.3);
+}
+.p2-turn .store-p2 .store-inner {
+  border-color: rgba(0, 150, 199, 0.6);
+  box-shadow:
+    inset 0 4px 20px rgba(0,0,0,0.8),
+    inset 0 0 40px rgba(0,0,0,0.5),
+    0 0 20px rgba(0, 150, 199, 0.25),
+    0 2px 8px rgba(0,0,0,0.4);
+}
+
+/* ================================================================
+   PITS AREA
+   ================================================================ */
+.pits-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 0;
+}
+
+.row {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 8px 0;
+  gap: 8px;
+}
+
+/* ================================================================
+   PITS
+   ================================================================ */
+.pit {
+  width: var(--pit-size);
+  height: var(--pit-size);
+  position: relative;
+  cursor: pointer;
+  border-radius: 50%;
+  transition: transform var(--anim-fast) ease;
+  user-select: none;
+  flex-shrink: 0;
+  /* Wooden rim surrounding the carved hole */
+  background: radial-gradient(ellipse at 45% 30%,
+    #9C5A2D 0%,
+    #7A3E18 35%,
+    #5C2D0A 60%,
+    #3B1A08 80%,
+    #2A1206 100%
+  );
+  box-shadow:
+    0 6px 18px rgba(0,0,0,0.75),
+    0 2px 6px rgba(0,0,0,0.4),
+    inset 0 2px 4px rgba(255,255,255,0.07),
+    inset 0 -2px 5px rgba(0,0,0,0.35);
+}
+
+.pit:focus-visible {
+  outline: 3px solid var(--text-gold);
+  outline-offset: 3px;
+}
+
+/* Carved-edge ring at the mouth of the hole */
+.pit::before {
+  content: '';
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 84%;
+  height: 84%;
+  border-radius: 50%;
+  background: transparent;
+  box-shadow:
+    0 0 0 2px rgba(15, 5, 1, 0.85),
+    0 0 0 3.5px rgba(90, 40, 10, 0.35);
+  pointer-events: none;
+  z-index: 3;
+}
+
+.pit-inner {
+  /* Positioned as the actual hollow hole inside the wooden rim */
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80%;
+  height: 80%;
+  border-radius: 50%;
+  /* Concave gradient: very dark at top (in shadow), faint warm glow at bottom (ground) */
+  background:
+    radial-gradient(ellipse 80% 55% at 50% 15%,
+      rgba(0, 0, 0, 0.98) 0%,
+      rgba(0, 0, 0, 0.6) 100%
+    ),
+    radial-gradient(ellipse 70% 50% at 50% 88%,
+      rgba(55, 18, 4, 0.45) 0%,
+      transparent 100%
+    ),
+    radial-gradient(ellipse at 50% 50%,
+      #0C0402 0%,
+      #110504 35%,
+      #1A0804 65%,
+      #220C06 88%,
+      #1A0804 100%
+    );
+  /* Deep hollow shadows simulate carved depth */
+  box-shadow:
+    inset 0 14px 36px rgba(0,0,0,1),
+    inset 0 7px 18px rgba(0,0,0,0.95),
+    inset 5px 5px 18px rgba(0,0,0,0.75),
+    inset -5px 5px 18px rgba(0,0,0,0.75),
+    inset 0 -5px 14px rgba(55, 18, 4, 0.38);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  overflow: hidden;
+  z-index: 1;
+  transition:
+    box-shadow var(--anim-mid),
+    background var(--anim-mid);
+}
+
+/* Very faint highlight on the near wall inside the hole */
+.pit-inner::after {
+  content: '';
+  position: absolute;
+  top: 4px; left: 10px;
+  width: 30%; height: 20%;
+  background: radial-gradient(ellipse, rgba(255,255,255,0.05), transparent);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.pit-seeds {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  width: 72%;
+  flex: 1;
+  padding: 6px 4px 0;
+}
+
+.pit-count {
+  font-family: var(--font-main);
+  font-size: 1rem;
+  font-weight: bold;
+  color: var(--text-gold);
+  text-shadow: 0 1px 4px rgba(0,0,0,0.9);
+  line-height: 1;
+  padding-bottom: 4px;
+  z-index: 1;
+  transition: transform var(--anim-fast);
+}
+
+/* Seed dots inside pits */
+.seed {
+  border-radius: 50%;
+  flex-shrink: 0;
+  position: relative;
+  transition: transform var(--anim-fast);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.5), inset 0 1px 2px rgba(255,255,255,0.2);
+}
+
+/* Seed sizes based on count */
+.seeds-small .seed  { width: 7px;  height: 7px; }
+.seeds-medium .seed { width: 9px;  height: 9px; }
+.seeds-large .seed  { width: 12px; height: 12px; }
+
+/* Seed colors cycle */
+.seed-c0 { background: radial-gradient(circle at 35% 35%, #FF7B29, #C4420A); }
+.seed-c1 { background: radial-gradient(circle at 35% 35%, #FFA833, #D47200); }
+.seed-c2 { background: radial-gradient(circle at 35% 35%, #FFD166, #B89000); }
+.seed-c3 { background: radial-gradient(circle at 35% 35%, #FF5B5B, #C21010); }
+.seed-c4 { background: radial-gradient(circle at 35% 35%, #CC4444, #8B0000); }
+.seed-c5 { background: radial-gradient(circle at 35% 35%, #E8855A, #9C3E18); }
+
+/* Store seed dots are a bit smaller */
+.store-seeds .seed {
+  width: 8px; height: 8px;
+}
+
+/* ================================================================
+   PIT STATES
+   ================================================================ */
+
+/* Playable pit hover — P1 outer glow on the wooden rim */
+.p1-turn .row-p1 .pit.playable:hover,
+.p1-turn .row-p1 .pit.playable:focus-visible {
+  box-shadow:
+    0 0 22px var(--p1-glow),
+    0 0 42px rgba(232,93,4,0.22),
+    0 6px 18px rgba(0,0,0,0.75),
+    inset 0 2px 4px rgba(255,255,255,0.07);
+}
+.p1-turn .row-p1 .pit.playable:hover .pit-inner,
+.p1-turn .row-p1 .pit.playable:focus-visible .pit-inner {
+  box-shadow:
+    inset 0 14px 36px rgba(0,0,0,1),
+    inset 0 7px 18px rgba(0,0,0,0.92),
+    inset 5px 5px 18px rgba(0,0,0,0.7),
+    inset -5px 5px 18px rgba(0,0,0,0.7),
+    inset 0 -5px 14px rgba(80, 28, 4, 0.55),
+    0 0 14px rgba(232,93,4,0.3);
+}
+
+/* Playable pit hover — P2 outer glow on the wooden rim */
+.p2-turn .row-p2 .pit.playable:hover,
+.p2-turn .row-p2 .pit.playable:focus-visible {
+  box-shadow:
+    0 0 22px var(--p2-glow),
+    0 0 42px rgba(0,150,199,0.22),
+    0 6px 18px rgba(0,0,0,0.75),
+    inset 0 2px 4px rgba(255,255,255,0.07);
+}
+.p2-turn .row-p2 .pit.playable:hover .pit-inner,
+.p2-turn .row-p2 .pit.playable:focus-visible .pit-inner {
+  box-shadow:
+    inset 0 14px 36px rgba(0,0,0,1),
+    inset 0 7px 18px rgba(0,0,0,0.92),
+    inset 5px 5px 18px rgba(0,0,0,0.7),
+    inset -5px 5px 18px rgba(0,0,0,0.7),
+    inset 0 -5px 14px rgba(0, 40, 60, 0.5),
+    0 0 14px rgba(0,150,199,0.3);
+}
+
+/* Highlighted during distribution path */
+.pit.highlight {
+  box-shadow:
+    0 0 20px var(--capture-glow),
+    0 0 36px rgba(255,215,0,0.2),
+    0 6px 18px rgba(0,0,0,0.75) !important;
+}
+.pit.highlight .pit-inner {
+  box-shadow:
+    inset 0 14px 36px rgba(0,0,0,0.95),
+    inset 0 7px 18px rgba(0,0,0,0.88),
+    inset 5px 5px 18px rgba(0,0,0,0.7),
+    inset -5px 5px 18px rgba(0,0,0,0.7),
+    inset 0 -5px 14px rgba(80,55,5,0.55),
+    0 0 16px rgba(255,215,0,0.35) !important;
+}
+
+/* Capture flash */
+.pit.capture-flash {
+  animation: capture-rim-flash 0.65s ease;
+}
+.pit.capture-flash .pit-inner {
+  animation: capture-hole-flash 0.65s ease;
+}
+@keyframes capture-rim-flash {
+  0%, 100% {}
+  35% {
+    box-shadow:
+      0 0 28px rgba(255,215,0,0.9),
+      0 0 50px rgba(255,180,0,0.5),
+      0 6px 18px rgba(0,0,0,0.75);
+  }
+}
+@keyframes capture-hole-flash {
+  0%, 100% {
+    background:
+      radial-gradient(ellipse 80% 55% at 50% 15%, rgba(0,0,0,0.98) 0%, rgba(0,0,0,0.6) 100%),
+      radial-gradient(ellipse 70% 50% at 50% 88%, rgba(55,18,4,0.45) 0%, transparent 100%),
+      radial-gradient(ellipse at 50% 50%, #0C0402 0%, #110504 35%, #1A0804 65%, #220C06 88%, #1A0804 100%);
+  }
+  35% {
+    background:
+      radial-gradient(ellipse 80% 55% at 50% 15%, rgba(80,50,0,0.7) 0%, rgba(0,0,0,0.4) 100%),
+      radial-gradient(ellipse at 50% 50%, #3A2800 0%, #2A1C00 40%, #1E1400 100%);
+    box-shadow:
+      inset 0 14px 36px rgba(0,0,0,0.85),
+      inset 0 -5px 14px rgba(120,80,0,0.6),
+      0 0 24px rgba(255,215,0,0.5);
+  }
+}
+
+/* Shake on invalid click */
+.pit.shake {
+  animation: shake-anim 0.4s ease;
+}
+@keyframes shake-anim {
+  0%   { transform: translateX(0); }
+  15%  { transform: translateX(-6px) rotate(-2deg); }
+  30%  { transform: translateX(6px)  rotate( 2deg); }
+  45%  { transform: translateX(-4px) rotate(-1deg); }
+  60%  { transform: translateX(4px)  rotate( 1deg); }
+  75%  { transform: translateX(-2px); }
+  100% { transform: translateX(0); }
+}
+
+/* Empty pit — rim slightly dims, hole stays dark */
+.pit.empty {
+  opacity: 0.7;
+}
+.pit.empty .pit-inner {
+  box-shadow:
+    inset 0 14px 36px rgba(0,0,0,1),
+    inset 0 7px 18px rgba(0,0,0,0.95),
+    inset 5px 5px 18px rgba(0,0,0,0.75),
+    inset -5px 5px 18px rgba(0,0,0,0.75);
+}
+
+/* Cursor for non-playable pits */
+.pit:not(.playable) {
+  cursor: default;
+}
+
+/* ================================================================
+   TOOLTIP
+   ================================================================ */
+.pit-tooltip {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%) translateY(4px);
+  background: rgba(20,8,2,0.95);
+  color: var(--text-gold);
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 6px;
+  border: 1px solid rgba(196,132,62,0.4);
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--anim-fast), transform var(--anim-fast);
+  z-index: 50;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.6);
+}
+.pit-tooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%; left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-top-color: rgba(20,8,2,0.95);
+}
+
+.pit:hover .pit-tooltip,
+.pit:focus-visible .pit-tooltip {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* P2 row tooltips go below */
+.row-p2 .pit-tooltip {
+  bottom: auto;
+  top: calc(100% + 8px);
+  transform: translateX(-50%) translateY(-4px);
+}
+.row-p2 .pit-tooltip::after {
+  top: auto;
+  bottom: 100%;
+  border-top-color: transparent;
+  border-bottom-color: rgba(20,8,2,0.95);
+}
+.row-p2 .pit:hover .pit-tooltip,
+.row-p2 .pit:focus-visible .pit-tooltip {
+  transform: translateX(-50%) translateY(0);
+}
+
+/* ================================================================
+   BOARD DIVIDER
+   ================================================================ */
+.board-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 4px 12px;
+}
+.divider-line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(196,132,62,0.4), transparent);
+}
+.divider-ornament {
+  color: var(--wood-grain);
+  font-size: 0.7rem;
+  opacity: 0.6;
+}
+
+/* ================================================================
+   CANVAS OVERLAYS
+   ================================================================ */
+#fly-canvas,
+#confetti-canvas {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 100;
+}
+
+/* ================================================================
+   MOVE HISTORY
+   ================================================================ */
+.history-panel {
+  max-width: 900px;
+  margin: 0 auto 32px;
+  padding: 0 24px;
+  width: 100%;
+}
+
+.history-title {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid rgba(196,132,62,0.15);
+}
+
+.history-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  list-style: none;
+  max-height: 80px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--wood-grain) transparent;
+}
+
+.history-list::-webkit-scrollbar { width: 4px; height: 4px; }
+.history-list::-webkit-scrollbar-track { background: transparent; }
+.history-list::-webkit-scrollbar-thumb { background: var(--wood-grain); border-radius: 4px; }
+
+.history-item {
+  font-size: 0.72rem;
+  padding: 3px 8px;
+  border-radius: 4px;
+  animation: history-in var(--anim-mid) ease both;
+}
+.history-item.p1-move {
+  background: rgba(232,93,4,0.15);
+  border: 1px solid rgba(232,93,4,0.25);
+  color: #FFA870;
+}
+.history-item.p2-move {
+  background: rgba(0,150,199,0.12);
+  border: 1px solid rgba(0,150,199,0.25);
+  color: #64C8E8;
+}
+.history-item.capture-move {
+  border-color: rgba(255,215,0,0.5) !important;
+  background: rgba(255,215,0,0.1) !important;
+  color: var(--text-gold) !important;
+}
+.history-item.extra-turn {
+  background: rgba(100,200,100,0.1) !important;
+  border-color: rgba(100,200,100,0.4) !important;
+  color: #90EE90 !important;
+}
+.history-item.stalemate-event {
+  background: rgba(160,120,200,0.12) !important;
+  border-color: rgba(160,120,200,0.45) !important;
+  color: #C8A8E8 !important;
+  font-style: italic;
+}
+@keyframes history-in {
+  from { opacity: 0; transform: translateY(-4px) scale(0.95); }
+  to   { opacity: 1; transform: translateY(0)    scale(1); }
+}
+
+/* ================================================================
+   AI THINKING INDICATOR
+   ================================================================ */
+.ai-thinking {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background: rgba(20,8,2,0.92);
+  border: 2px solid rgba(0,150,199,0.5);
+  border-radius: 12px;
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--p2-color);
+  font-size: 0.875rem;
+  font-weight: 600;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.5), 0 0 20px rgba(0,150,199,0.2);
+  z-index: 200;
+  animation: slide-in-right var(--anim-mid) ease;
+}
+
+.ai-thinking[hidden] { display: none !important; }
+
+@keyframes slide-in-right {
+  from { transform: translateX(100%); opacity: 0; }
+  to   { transform: translateX(0);    opacity: 1; }
+}
+
+.thinking-dots {
+  display: flex;
+  gap: 4px;
+}
+.thinking-dots span {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--p2-color);
+  animation: thinking-dot 1.2s ease-in-out infinite;
+}
+.thinking-dots span:nth-child(2) { animation-delay: 0.2s; }
+.thinking-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes thinking-dot {
+  0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+  30%            { transform: translateY(-6px); opacity: 1; }
+}
+
+/* ================================================================
+   VICTORY OVERLAY
+   ================================================================ */
+.victory-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(10,4,1,0.88);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 300;
+  backdrop-filter: blur(6px);
+  animation: fade-in var(--anim-slow) ease both;
+}
+.victory-overlay[hidden] { display: none !important; }
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.victory-card {
+  background: linear-gradient(160deg, #3B1F0C, #5C2D0A, #3B1F0C);
+  border: 3px solid var(--wood-grain);
+  border-radius: 24px;
+  padding: 48px 56px;
+  text-align: center;
+  box-shadow:
+    0 30px 80px rgba(0,0,0,0.8),
+    0 0 60px rgba(196,132,62,0.2),
+    inset 0 2px 4px rgba(255,255,255,0.06);
+  animation: card-pop var(--anim-slow) cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  max-width: 400px;
+  width: 90%;
+}
+
+@keyframes card-pop {
+  from { transform: scale(0.7) translateY(40px); opacity: 0; }
+  to   { transform: scale(1)   translateY(0);    opacity: 1; }
+}
+
+.victory-emoji {
+  font-size: 4rem;
+  margin-bottom: 16px;
+  animation: emoji-bounce 0.6s ease 0.5s both;
+}
+@keyframes emoji-bounce {
+  0%   { transform: scale(0); }
+  60%  { transform: scale(1.3); }
+  100% { transform: scale(1); }
+}
+
+.victory-title {
+  font-family: var(--font-main);
+  font-size: 2.2rem;
+  font-weight: 900;
+  background: linear-gradient(135deg, var(--wood-honey), #FFD166, var(--wood-grain));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 24px;
+  letter-spacing: 0.05em;
+}
+
+.victory-scores {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
+.vscore {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+.vscore-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+.vscore-val {
+  font-family: var(--font-main);
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: var(--text-gold);
+  text-shadow: 0 0 20px rgba(255,215,0,0.4);
+}
+.vscore-p1 .vscore-val { color: var(--p1-color); text-shadow: 0 0 20px var(--p1-glow); }
+.vscore-p2 .vscore-val { color: var(--p2-color); text-shadow: 0 0 20px var(--p2-glow); }
+.vscore-divider {
+  font-size: 1rem;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+/* ================================================================
+   RESPONSIVE
+   ================================================================ */
+@media (max-width: 700px) {
+  :root {
+    --pit-size:   68px;
+    --store-w:    72px;
+    --store-h:    190px;
+  }
+
+  .board {
+    padding: 12px;
+  }
+
+  .row {
+    gap: 4px;
+  }
+
+  .title-ayo { font-size: 1.6rem; }
+  .title-sub { font-size: 0.6rem; }
+
+  .status-message { font-size: 0.85rem; min-width: 120px; }
+  .turn-badge { padding: 4px 10px; font-size: 0.78rem; }
+
+  .store-inner {
+    width: 60px;
+    height: 160px;
+  }
+
+  .store-count { font-size: 1.3rem; }
+
+  .victory-card { padding: 32px 24px; }
+  .victory-title { font-size: 1.6rem; }
+  .vscore-val { font-size: 1.8rem; }
+
+  .btn { padding: 7px 12px; font-size: 0.8rem; }
+  .mode-label { display: none; }
+}
+
+@media (max-width: 480px) {
+  :root {
+    --pit-size:  54px;
+    --store-w:   58px;
+    --store-h:   160px;
+  }
+  .pit-count { font-size: 0.8rem; }
+  .board { padding: 8px; gap: 0; }
+  .row { gap: 2px; }
+}
+
+/* ================================================================
+   UTILITY / MISC
+   ================================================================ */
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Scrollbar global */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); }
+::-webkit-scrollbar-thumb { background: var(--wood-grain); border-radius: 3px; }
+
+/* Pit cursor states */
+.p1-turn .row-p1 .pit.playable { cursor: pointer; }
+.p2-turn .row-p2 .pit.playable { cursor: pointer; }
+
+/* Disabled board during animation */
+.board.animating .pit { pointer-events: none; }

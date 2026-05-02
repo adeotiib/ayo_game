@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ayo — The Ancient Game of Seeds</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="app">
+
+    <!-- Header -->
+    <header class="game-header">
+      <div class="header-inner">
+        <h1 class="title">
+          <span class="title-ayo">AYO</span>
+          <span class="title-sub">The Ancient Game of Seeds</span>
+        </h1>
+        <div class="header-controls">
+          <button id="btn-toggle-mode" class="btn btn-outline" title="Toggle game mode">
+            <span class="mode-icon">🤖</span>
+            <span class="mode-label">vs AI</span>
+          </button>
+          <button id="btn-new-game" class="btn btn-primary">New Game</button>
+          <button id="btn-toggle-sound" class="btn btn-icon" title="Toggle sound">
+            <span class="sound-icon">🔊</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Status Bar -->
+    <div class="status-bar">
+      <div class="player-indicator" id="player-indicator">
+        <div class="turn-badge p1-badge" id="badge-p1">
+          <span class="player-name">Player 1</span>
+          <span class="turn-dot"></span>
+        </div>
+        <div class="status-message" id="status-message">Player 1's Turn</div>
+        <div class="turn-badge p2-badge" id="badge-p2">
+          <span class="turn-dot"></span>
+          <span class="player-name" id="p2-name">Player 2</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Board Container -->
+    <main class="board-wrap">
+      <div class="board" id="board">
+
+        <!-- Player 2 Store (left) -->
+        <div class="store store-p2" id="store-p2" role="region" aria-label="Player 2 Store">
+          <div class="store-inner">
+            <div class="store-seeds" id="store-p2-seeds"></div>
+            <div class="store-count" id="store-p2-count">0</div>
+            <div class="store-label">Captured</div>
+          </div>
+        </div>
+
+        <!-- Pits Area -->
+        <div class="pits-area">
+
+          <!-- Player 2 row (top, rendered right-to-left: pit 5..0) -->
+          <div class="row row-p2" id="row-p2">
+            <div class="pit" id="pit-p2-5" data-player="2" data-index="5" role="button" tabindex="0" aria-label="Player 2 Pit 6">
+              <div class="pit-inner">
+                <div class="pit-seeds" id="seeds-p2-5"></div>
+                <div class="pit-count" id="count-p2-5">4</div>
+              </div>
+              <div class="pit-tooltip" id="tip-p2-5">4 seeds</div>
+            </div>
+            <div class="pit" id="pit-p2-4" data-player="2" data-index="4" role="button" tabindex="0" aria-label="Player 2 Pit 5">
+              <div class="pit-inner">
+                <div class="pit-seeds" id="seeds-p2-4"></div>
+                <div class="pit-count" id="count-p2-4">4</div>
+              </div>
+              <div class="pit-tooltip" id="tip-p2-4">4 seeds</div>
+            </div>
+            <div class="pit" id="pit-p2-3" data-player="2" data-index="3" role="button" tabindex="0" aria-label="Player 2 Pit 4">
+              <div class="pit-inner">
+                <div class="pit-seeds" id="seeds-p2-3"></div>
+                <div class="pit-count" id="count-p2-3">4</div>
+              </div>
+              <div class="pit-tooltip" id="tip-p2-3">4 seeds</div>
+            </div>
+            <div class="pit" id="pit-p2-2" data-player="2" data-index="2" role="button" tabindex="0" aria-label="Player 2 Pit 3">
+              <div class="pit-inner">
+                <div class="pit-seeds" id="seeds-p2-2"></div>
+                <div class="pit-count" id="count-p2-2">4</div>
+              </div>
+              <div class="pit-tooltip" id="tip-p2-2">4 seeds</div>
+            </div>
+            <div class="pit" id="pit-p2-1" data-player="2" data-index="1" role="button" tabindex="0" aria-label="Player 2 Pit 2">
+              <div class="pit-inner">
+                <div class="pit-seeds" id="seeds-p2-1"></div>
+                <div class="pit-count" id="count-p2-1">4</div>
+              </div>
+              <div class="pit-tooltip" id="tip-p2-1">4 seeds</div>
+            </div>
+            <div class="pit" id="pit-p2-0" data-player="2" data-index="0" role="button" tabindex="0" aria-label="Player 2 Pit 1">
+              <div class="pit-inner">
+                <div class="pit-seeds" id="seeds-p2-0"></div>
+                <div class="pit-count" id="count-p2-0">4</div>
+              </div>
+              <div class="pit-tooltip" id="tip-p2-0">4 seeds</div>
+            </div>
+          </div>
+
+          <!-- Divider line -->
+          <div class="board-divider">
+            <div class="divider-line"></div>
+            <div class="divider-ornament">✦</div>
+            <div class="divider-line"></div>
+          </div>
+
+          <!-- Player 1 row (bottom, left-to-right: pit 0..5) -->
+          <div class="row row-p1" id="row-p1">
+            <div class="pit" id="pit-p1-0" data-player="1" data-index="0" role="button" tabindex="0" aria-label="Player 1 Pit 1">
+              <div class="pit-inner">
+                <div class="pit-seeds" id="seeds-p1-0"></div>
+                <div class="pit-count" id="count-p1-0">4</div>
+              </div>
+              <div class="pit-tooltip" id="tip-p1-0">4 seeds</div>
+            </div>
+            <div class="pit" id="pit-p1-1" data-player="1" data-index="1" role="button" tabindex="0" aria-label="Player 1 Pit 2">
+              <div class="pit-inner">
+                <div class="pit-seeds" id="seeds-p1-1"></div>
+                <div class="pit-count" id="count-p1-1">4</div>
+              </div>
+              <div class="pit-tooltip" id="tip-p1-1">4 seeds</div>
+            </div>
+            <div class="pit" id="pit-p1-2" data-player="1" data-index="2" role="button" tabindex="0" aria-label="Player 1 Pit 3">
+              <div class="pit-inner">
+                <div class="pit-seeds" id="seeds-p1-2"></div>
+                <div class="pit-count" id="count-p1-2">4</div>
+              </div>
+              <div class="pit-tooltip" id="tip-p1-2">4 seeds</div>
+            </div>
+            <div class="pit" id="pit-p1-3" data-player="1" data-index="3" role="button" tabindex="0" aria-label="Player 1 Pit 4">
+              <div class="pit-inner">
+                <div class="pit-seeds" id="seeds-p1-3"></div>
+                <div class="pit-count" id="count-p1-3">4</div>
+              </div>
+              <div class="pit-tooltip" id="tip-p1-3">4 seeds</div>
+            </div>
+            <div class="pit" id="pit-p1-4" data-player="1" data-index="4" role="button" tabindex="0" aria-label="Player 1 Pit 5">
+              <div class="pit-inner">
+                <div class="pit-seeds" id="seeds-p1-4"></div>
+                <div class="pit-count" id="count-p1-4">4</div>
+              </div>
+              <div class="pit-tooltip" id="tip-p1-4">4 seeds</div>
+            </div>
+            <div class="pit" id="pit-p1-5" data-player="1" data-index="5" role="button" tabindex="0" aria-label="Player 1 Pit 6">
+              <div class="pit-inner">
+                <div class="pit-seeds" id="seeds-p1-5"></div>
+                <div class="pit-count" id="count-p1-5">4</div>
+              </div>
+              <div class="pit-tooltip" id="tip-p1-5">4 seeds</div>
+            </div>
+          </div>
+
+        </div><!-- /pits-area -->
+
+        <!-- Player 1 Store (right) -->
+        <div class="store store-p1" id="store-p1" role="region" aria-label="Player 1 Store">
+          <div class="store-inner">
+            <div class="store-seeds" id="store-p1-seeds"></div>
+            <div class="store-count" id="store-p1-count">0</div>
+            <div class="store-label">Captured</div>
+          </div>
+        </div>
+
+      </div><!-- /board -->
+    </main>
+
+    <!-- Move History -->
+    <div class="history-panel">
+      <h3 class="history-title">Move History</h3>
+      <ol class="history-list" id="history-list"></ol>
+    </div>
+
+    <!-- Flying seed canvas overlay -->
+    <canvas id="fly-canvas" aria-hidden="true"></canvas>
+
+    <!-- Confetti canvas -->
+    <canvas id="confetti-canvas" aria-hidden="true"></canvas>
+
+    <!-- Victory Overlay -->
+    <div class="victory-overlay" id="victory-overlay" hidden>
+      <div class="victory-card">
+        <div class="victory-emoji" id="victory-emoji">🎉</div>
+        <h2 class="victory-title" id="victory-title">Player 1 Wins!</h2>
+        <div class="victory-scores" id="victory-scores">
+          <div class="vscore vscore-p1">
+            <span class="vscore-label">Player 1</span>
+            <span class="vscore-val" id="vscore-p1">0</span>
+          </div>
+          <div class="vscore-divider">vs</div>
+          <div class="vscore vscore-p2">
+            <span class="vscore-label" id="vscore-p2-label">Player 2</span>
+            <span class="vscore-val" id="vscore-p2">0</span>
+          </div>
+        </div>
+        <button class="btn btn-primary btn-lg" id="btn-play-again">Play Again</button>
+      </div>
+    </div>
+
+    <!-- AI Thinking indicator -->
+    <div class="ai-thinking" id="ai-thinking" hidden>
+      <div class="thinking-dots">
+        <span></span><span></span><span></span>
+      </div>
+      <span>AI is thinking…</span>
+    </div>
+
+  </div><!-- /app -->
+
+  <script src="game.js"></script>
+</body>
+</html>
